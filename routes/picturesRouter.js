@@ -10,5 +10,6 @@ router.post(
   upload.single("file"),
   picturesController.insertPicture
 );
+router.delete("/picture/:id", picturesController.removePicture);
 
 module.exports = router;

@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 const Picture = require("../model/Picture");
 
 const getAllPictures = async (req, res) => {
@@ -58,7 +60,23 @@ const insertPicture = async (req, res) => {
       message: "Image saved successfully!",
     });
   } catch (error) {
-    res.status(500).json({ message: "error saving image" });
+    res.status(500).json({ message: "Error saving image" });
+  }
+};
+
+const removePicture = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const picture = await Picture.get(id);
+
+    if (!picture) res.status(404).json({ message: "Image not found!" });
+
+    fs.unlinkSync(picture.src);
+    await Picture.remove(id);
+
+    res.json({ message: "Image removed successfully!" });
+  } catch (error) {
+    res.status(500).json({ message: "Error remove image" });
   }
 };
 
@@ -66,4 +84,5 @@ module.exports = {
   getPictures,
   getAllPictures,
   insertPicture,
+  removePicture,
 };
